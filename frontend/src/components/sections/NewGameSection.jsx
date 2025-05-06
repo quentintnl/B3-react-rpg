@@ -2,9 +2,14 @@ import { useState } from 'react'
 import Button from '../button'
 import Modal from '../Modal'
 import NewGameForm from '../forms/NewGameForm'
+import { useAuth } from '../../contexts/AuthContext.jsx'
+
 
 function NewGameSection () {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { state: { user } } = useAuth()
+
+  const havePlayer = user.players.length < 1
 
   return (
     <>
@@ -14,15 +19,22 @@ function NewGameSection () {
           <Button
             variant='success'
             onClick={() => setIsModalOpen(true)}
+            disabled={havePlayer}
           >
             Créer une partie
           </Button>
           <Button
             variant='info'
+            disabled={havePlayer}
           >
             Rejoindre une partie
           </Button>
         </div>
+        {havePlayer && (
+          <p className='text-sm text-red-500'>
+            Créer un personnage avant de pouvoir créer une partie.
+          </p>
+        )}
       </section>
       <Modal
         isOpen={isModalOpen}
